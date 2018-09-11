@@ -160,6 +160,7 @@ public class TTS extends CordovaPlugin implements OnInitListener {
         String text;
         String locale;
         double rate;
+		double pitch;
 
         if (params.isNull("text")) {
             callbackContext.error(ERR_INVALID_OPTIONS);
@@ -180,6 +181,12 @@ public class TTS extends CordovaPlugin implements OnInitListener {
             rate = params.getDouble("rate");
         }
 
+        if (params.isNull("pitch")) {
+            pitch = 1.0;
+        } else {
+            pitch = params.getDouble("pitch");
+        }
+				
         if (tts == null) {
             callbackContext.error(ERR_ERROR_INITIALIZING);
             return;
@@ -202,6 +209,7 @@ public class TTS extends CordovaPlugin implements OnInitListener {
             tts.setSpeechRate((float) rate);
         }
 
+		tts.setPitch((float) pitch);
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, ttsParams);
     }
 }
