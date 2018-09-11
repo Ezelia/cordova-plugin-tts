@@ -27,6 +27,7 @@ import android.content.Context;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.speech.tts.Voice;
 
 /*
     Cordova Text-to-Speech Plugin
@@ -86,6 +87,8 @@ public class TTS extends CordovaPlugin implements OnInitListener {
             stop(args, callbackContext);
         } else if (action.equals("checkLanguage")) {
             checkLanguage(args, callbackContext);
+        } else if (action.equals("getVoices")) {
+            getVoices(callbackContext);
         } else if (action.equals("openInstallTts")) {
             callInstallTtsActivity(args, callbackContext);
         } else {
@@ -148,6 +151,22 @@ public class TTS extends CordovaPlugin implements OnInitListener {
         callbackContext.sendPluginResult(result);
     }
 
+    private void getVoices(CallbackContext callbackContext)
+      throws JSONException, NullPointerException {
+        Set<Voice> voices = tts.getVoices();
+        String voices_list = "";
+        if(voices!= null) {
+            for (Voice voice : voices) {
+                voices_list = voices_list + "," + voice.getName();
+            }
+        }
+        if (voices_list != "") {
+            voices_list = voices_list.substring(1);
+        }
+
+        final PluginResult result = new PluginResult(PluginResult.Status.OK, voices_list);
+        callbackContext.sendPluginResult(result);
+    }	
     private void speak(JSONArray args, CallbackContext callbackContext)
             throws JSONException, NullPointerException {
         JSONObject params = args.getJSONObject(0);
